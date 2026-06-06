@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -9,7 +10,7 @@
 body { direction: rtl; font-family: Arial, sans-serif; background: #f5f5f0; color: #1a1a1a; }
 .wrap { padding: 1rem; max-width: 600px; margin: 0 auto; }
 .header { background: linear-gradient(135deg, #1D9E75 0%, #0F6E56 100%); border-radius: 12px; padding: 1.5rem; color: white; text-align: center; margin-bottom: 1.5rem; }
-.bird-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+.bird-icon { font-size: 3rem; margin-bottom: 0.5rem; color: black; }
 .header h1 { font-size: 2rem; font-weight: 500; margin-bottom: 0.3rem; color: #E1F5EE; }
 .header .subtitle { font-size: 1rem; color: #9FE1CB; }
 .day-badge { background: rgba(255,255,255,0.2); border-radius: 20px; padding: 0.3rem 1rem; display: inline-block; font-size: 0.95rem; margin-top: 0.6rem; color: white; }
@@ -90,47 +91,4 @@ const questions = [
 ];
 let answered = 0, score = 0;
 function buildQuestions() {
-  const container = document.getElementById('questions-container');
-  container.innerHTML = '';
-  answered = 0; score = 0;
-  updateProgress();
-  questions.forEach((item, i) => {
-    const card = document.createElement('div');
-    card.className = 'question-card';
-    card.id = 'q-' + i;
-    card.innerHTML = `<div class="q-num">שאלה ${i+1} מתוך ${questions.length}</div><div class="q-text">${item.q}</div><div class="btn-row"><button class="btn-true" onclick="answer(${i}, true)">✔ נכון</button><button class="btn-false" onclick="answer(${i}, false)">✘ לא נכון</button></div><div class="feedback" id="fb-${i}"></div>`;
-    container.appendChild(card);
-  });
-  document.getElementById('score-card').style.display = 'none';
-}
-function answer(i, val) {
-  const card = document.getElementById('q-' + i);
-  if (card.dataset.answered) return;
-  card.dataset.answered = '1'; answered++;
-  const correct = questions[i].a, isRight = val === correct;
-  if (isRight) score++;
-  const trueBtn = card.querySelector('.btn-true'), falseBtn = card.querySelector('.btn-false');
-  trueBtn.disabled = true; falseBtn.disabled = true;
-  if (correct) trueBtn.classList.add('show-correct'); else falseBtn.classList.add('show-correct');
-  (val ? trueBtn : falseBtn).classList.add(isRight ? 'selected-correct' : 'selected-wrong');
-  const fb = document.getElementById('fb-' + i);
-  fb.className = 'feedback ' + (isRight ? 'correct' : 'wrong');
-  fb.textContent = (isRight ? '✔ ' : '✘ ') + questions[i].exp;
-  updateProgress();
-  if (answered === questions.length) setTimeout(showScore, 600);
-}
-function updateProgress() {
-  document.getElementById('progress').style.width = ((answered / questions.length) * 100) + '%';
-}
-function showScore() {
-  const sc = document.getElementById('score-card');
-  sc.style.display = 'block';
-  document.getElementById('score-display').textContent = score + ' / ' + questions.length;
-  document.getElementById('score-msg').textContent = score === 10 ? '🌟 מושלם! אתם מומחי סיסים אמיתיים!' : score >= 8 ? '👏 כל הכבוד! ידע מרשים מאוד.' : score >= 6 ? '👍 יפה! עוד מעט ותהיו מומחים.' : '📚 מומלץ לקרוא שוב את המידע ולנסות שוב!';
-  sc.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-function restartQuiz() { buildQuestions(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-buildQuestions();
-</script>
-</body>
-</html>
+  const container = document.
