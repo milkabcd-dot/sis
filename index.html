@@ -57,4 +57,80 @@ body { direction: rtl; font-family: Arial, sans-serif; background: #f5f5f0; colo
     <div class="fact">🌍 <strong>תפוצה:</strong> הסיס מצוי ברוב אירופה, צפון אפריקה, המזרח התיכון ומרכז אסיה. בחורף הוא נודד לאפריקה הטרופית.</div>
     <div class="fact">✈️ <strong>אלוף הטיסה:</strong> הסיס מבלה כמעט את כל חייו באוויר! הוא צד, שותה, ישן ואפילו מזדווג בעת הטיסה. הוא נוחת רק כשמגיע זמן הקינון.</div>
     <div class="fact">🏠 <strong>קינון:</strong> הסיס קושר את קנו בסדקים של קירות, גגות ומבנים. הוא לעולם אינו נוחת על הקרקע – רק על משטחים אנכיים!</div>
-    <div class="fact">🥚 <strong>גידול הצאצאים:</strong> הסיסים מטילים 2–3 ביצים וד
+    <div class="fact">🥚 <strong>גידול הצאצאים:</strong> הסיסים מטילים 2–3 ביצים ודוגרים עליהן יחד. בסוף יולי הגוזלים פורחים מהקן לעד.</div>
+    <div class="fact">⚡ <strong>מהירות:</strong> הסיס הוא מן המהירות בין ציפורי העולם. עקב מהירותו, כמעט ואין טורפים שיכולים לאיים עליו בזמן הטיסה.</div>
+    <div class="fact">❤️ <strong>נאמנות:</strong> הסיס נאמן לבן זוגו שנים רבות, וחוזר לאותו קן בכל עונה.</div>
+    <div class="fact">⚖️ <strong>מסה:</strong> הסיס קטן יחסית – מסתו בין 35 ל-55 גרם בלבד, וצבעו שחום-שחור עם כתם לבנבן על הסנטר.</div>
+  </div>
+  <div class="quiz-section">
+    <h2>בחנו את עצמכם – נכון או לא נכון?</h2>
+    <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+    <div id="questions-container"></div>
+    <div class="score-card" id="score-card">
+      <h3>סיימתם את הבוחן!</h3>
+      <div class="score-num" id="score-display"></div>
+      <div class="score-msg" id="score-msg"></div>
+      <button class="restart-btn" onclick="restartQuiz()">נסו שוב</button>
+    </div>
+  </div>
+  <div class="credit">עריכה: מילכה ברקו גרש</div>
+</div>
+<script>
+const questions = [
+  { q: "הסיס מבלה את רוב חייו בתעופה, גם כשהוא ישן.", a: true, exp: "נכון! הסיס ישן, אוכל, שותה ואפילו מזדווג בזמן טיסה." },
+  { q: "הסיס יכול לנחות על הקרקע ולהתהלך כמו יונה.", a: false, exp: "לא נכון. רגלי הסיס קטנות מאוד ומותאמות לאחיזה בקירות – הוא לעולם אינו נוחת על הקרקע." },
+  { q: "יום הסיס הבינלאומי הוא ב-7 ביוני.", a: true, exp: "נכון! יום הסיס נחוג ב-7 ביוני בכל שנה מאז 2019." },
+  { q: "הסיס דומה לסנונית וזהו אותו מין בדיוק.", a: false, exp: "לא נכון. למרות הדמיון החיצוני, הסיס והסנונית שייכים לשתי סדרות שונות לחלוטין." },
+  { q: "הסיס קושר את קנו בסדקים של קירות ומבנים.", a: true, exp: "נכון! הסיס קונן בגובה רב ובחורים צרים בקירות ובגגות." },
+  { q: "הסיס חורף בישראל כל החורף ואינו נודד לחו\"ל.", a: false, exp: "לא נכון. הסיס נודד בחורף לאפריקה הטרופית, מדרום לקו המשווה." },
+  { q: "לסיס אין הבדל בצבע בין זכרים לנקבות.", a: true, exp: "נכון! הסיס הזכר והנקבה נראים אותו דבר. ניתן להבדיל ביניהם רק לפי גובה הקול." },
+  { q: "הסיס מטיל בדרך כלל 5–6 ביצים בכל עונה.", a: false, exp: "לא נכון. הסיס מטיל רק 2–3 ביצים בעונה." },
+  { q: "הסיס נאמן לבן זוגו ולאותו קן שנים רבות.", a: true, exp: "נכון! הסיס חוזר לאותו קן ולאותו בן זוג שנה אחרי שנה." },
+  { q: "מסת הסיס יכולה להגיע עד קילוגרם אחד.", a: false, exp: "לא נכון. הסיס קטן מאוד ומסתו רק 35–55 גרם בלבד." }
+];
+let answered = 0, score = 0;
+function buildQuestions() {
+  const container = document.getElementById('questions-container');
+  container.innerHTML = '';
+  answered = 0; score = 0;
+  updateProgress();
+  questions.forEach((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = 'q-' + i;
+    card.innerHTML = `<div class="q-num">שאלה ${i+1} מתוך ${questions.length}</div><div class="q-text">${item.q}</div><div class="btn-row"><button class="btn-true" onclick="answer(${i}, true)">✔ נכון</button><button class="btn-false" onclick="answer(${i}, false)">✘ לא נכון</button></div><div class="feedback" id="fb-${i}"></div>`;
+    container.appendChild(card);
+  });
+  document.getElementById('score-card').style.display = 'none';
+}
+function answer(i, val) {
+  const card = document.getElementById('q-' + i);
+  if (card.dataset.answered) return;
+  card.dataset.answered = '1'; answered++;
+  const correct = questions[i].a, isRight = val === correct;
+  if (isRight) score++;
+  const trueBtn = card.querySelector('.btn-true'), falseBtn = card.querySelector('.btn-false');
+  trueBtn.disabled = true; falseBtn.disabled = true;
+  if (correct) trueBtn.classList.add('show-correct'); else falseBtn.classList.add('show-correct');
+  (val ? trueBtn : falseBtn).classList.add(isRight ? 'selected-correct' : 'selected-wrong');
+  const fb = document.getElementById('fb-' + i);
+  fb.className = 'feedback ' + (isRight ? 'correct' : 'wrong');
+  fb.textContent = (isRight ? '✔ ' : '✘ ') + questions[i].exp;
+  updateProgress();
+  if (answered === questions.length) setTimeout(showScore, 600);
+}
+function updateProgress() {
+  document.getElementById('progress').style.width = ((answered / questions.length) * 100) + '%';
+}
+function showScore() {
+  const sc = document.getElementById('score-card');
+  sc.style.display = 'block';
+  document.getElementById('score-display').textContent = score + ' / ' + questions.length;
+  document.getElementById('score-msg').textContent = score === 10 ? '🌟 מושלם! אתם מומחי סיסים אמיתיים!' : score >= 8 ? '👏 כל הכבוד! ידע מרשים מאוד.' : score >= 6 ? '👍 יפה! עוד מעט ותהיו מומחים.' : '📚 מומלץ לקרוא שוב את המידע ולנסות שוב!';
+  sc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function restartQuiz() { buildQuestions(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+buildQuestions();
+</script>
+</body>
+</html>
